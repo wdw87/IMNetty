@@ -6,6 +6,7 @@ import io.netty.channel.SimpleChannelInboundHandler;
 import wdw.protocal.PacketCodeC;
 import wdw.protocal.request.LoginRequestPacket;
 import wdw.protocal.response.LoginResponsePacket;
+import wdw.util.LoginUtil;
 
 import java.util.Date;
 
@@ -22,6 +23,7 @@ public class LoginRequestHandler extends SimpleChannelInboundHandler<LoginReques
             System.out.println(new Date() + " :");
             System.out.println("user logined:");
             System.out.println("username: " + loginRequestPacket.getUsername());
+            LoginUtil.markAsLogin(channelHandlerContext.channel());
         } else {
             //校验失败
             loginResponsePacket.setSuccess(false);

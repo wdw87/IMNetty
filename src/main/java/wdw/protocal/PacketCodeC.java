@@ -16,7 +16,7 @@ import java.util.Map;
 
 public class PacketCodeC {
 
-    private static final int MAGIC_NUMBER = 0x12345678;
+    public static final int MAGIC_NUMBER = 0x12345678;
 
     public static final PacketCodeC INSTANCE = new PacketCodeC();
 
@@ -37,20 +37,6 @@ public class PacketCodeC {
         serializerTypeMap.put(serializer.getSerializerAlgorithm(), serializer);
     }
 
-    public ByteBuf encode(ByteBufAllocator byteBufAllocator, Packet packet){
-        ByteBuf byteBuf = byteBufAllocator.ioBuffer();
-
-        byte[] bytes = Serializer.DEFAULT.serialize(packet);
-        byteBuf.writeInt(MAGIC_NUMBER);
-        byteBuf.writeByte(packet.getVersion());
-        byteBuf.writeByte(Serializer.DEFAULT.getSerializerAlgorithm());
-        byteBuf.writeByte(packet.getCommand());
-        byteBuf.writeInt(bytes.length);
-        byteBuf.writeBytes(bytes);
-
-        return byteBuf;
-    }
-
     public void encode(ByteBuf byteBuf, Packet packet){
         // 1. 序列化 java 对象
         byte[] bytes = Serializer.DEFAULT.serialize(packet);
@@ -65,33 +51,32 @@ public class PacketCodeC {
     }
 
     public Packet decode(ByteBuf byteBuf){
-
-        //跳过魔数
+        // 跳过 magic number
         byteBuf.skipBytes(4);
-        //跳过版本号
+
+        // 跳过版本号
         byteBuf.skipBytes(1);
 
-        byte serializerAlgorithm = byteBuf.readByte();
+        // 序列化算法
+        byte serializeAlgorithm = byteBuf.readByte();
 
+        // 指令
         byte command = byteBuf.readByte();
 
+        // 数据包长度
         int length = byteBuf.readInt();
 
         byte[] bytes = new byte[length];
-
         byteBuf.readBytes(bytes);
 
         Class<? extends Packet> requestType = getRequestType(command);
+        Serializer serializer = getSerializer(serializeAlgorithm);
 
-        Serializer serializer = getSerializer(serializerAlgorithm);
-
-        if(requestType != null && serializer != null) {
+        if (requestType != null && serializer != null) {
             return serializer.deserialize(requestType, bytes);
         }
 
         return null;
-
-
     }
 
     private Class<? extends Packet> getRequestType(byte command){

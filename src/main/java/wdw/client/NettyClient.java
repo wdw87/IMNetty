@@ -14,6 +14,7 @@ import wdw.client.handler.MessageResponseHandler;
 import wdw.protocal.PacketCodeC;
 import wdw.protocal.codec.PacketDecoder;
 import wdw.protocal.codec.PacketEncoder;
+import wdw.protocal.codec.Spliter;
 import wdw.protocal.request.MessageRequestPacket;
 import wdw.util.LoginUtil;
 
@@ -47,18 +48,14 @@ public class NettyClient {
     private static void startConsoleThread(Channel channel) {
         new Thread(() -> {
             while (!Thread.interrupted()) {
-                if (LoginUtil.hadLogin(channel)) {
+                //if (LoginUtil.hadLogin(channel)) {
                     System.out.println("please input message :");
-
                     Scanner sc = new Scanner(System.in);
-
                     String line = sc.nextLine();
-
                     MessageRequestPacket packet = new MessageRequestPacket();
                     packet.setMessage(line);
-                    ByteBuf byteBuf = PacketCodeC.INSTANCE.encode(channel.alloc(), packet);
-                    channel.writeAndFlush(byteBuf);
-                }
+                    channel.writeAndFlush(packet);
+                //}
             }
         }).start();
     }
@@ -73,6 +70,7 @@ public class NettyClient {
                 .handler(new ChannelInitializer<SocketChannel>() {
                     @Override
                     protected void initChannel(SocketChannel socketChannel) throws Exception {
+                        socketChannel.pipeline().addLast(new Spliter());
                         socketChannel.pipeline().addLast(new PacketDecoder());
                         socketChannel.pipeline().addLast(new LoginResponseHandler());
                         socketChannel.pipeline().addLast(new MessageResponseHandler());
