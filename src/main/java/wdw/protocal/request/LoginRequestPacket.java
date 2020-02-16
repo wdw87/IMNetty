@@ -7,7 +7,6 @@ import static wdw.protocal.command.Command.LOGIN_REQUEST;
 @Data
 public class LoginRequestPacket extends Packet {
 
-    private String uesrId;
 
     private String username;
 

@@ -7,6 +7,10 @@ import wdw.protocal.command.Command;
 @Data
 public class MessageResponsePacket extends Packet {
 
+    private String fromId;
+
+    private String fromName;
+
     private String message;
 
     @Override

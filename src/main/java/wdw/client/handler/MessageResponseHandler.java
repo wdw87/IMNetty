@@ -9,7 +9,12 @@ import java.util.Date;
 public class MessageResponseHandler extends SimpleChannelInboundHandler<MessageResponsePacket> {
     @Override
     protected void channelRead0(ChannelHandlerContext channelHandlerContext, MessageResponsePacket messageResponsePacket) throws Exception {
+        String fromId = messageResponsePacket.getFromId();
+        String fromUser = messageResponsePacket.getFromName();
+
         String mesg = messageResponsePacket.getMessage();
-        System.out.println(new Date() + ": server received :" + "[" + mesg + "]");
+
+        System.out.println(new Date() + ": " + fromId + " : " + fromUser);
+        System.out.println("\t" + mesg);
     }
 }
