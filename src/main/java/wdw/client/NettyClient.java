@@ -1,22 +1,21 @@
 package wdw.client;
 
 import io.netty.bootstrap.Bootstrap;
-import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
-import io.netty.handler.codec.string.StringEncoder;
 import wdw.client.handler.LoginResponseHandler;
 import wdw.client.handler.MessageResponseHandler;
-import wdw.protocal.PacketCodeC;
 import wdw.protocal.codec.PacketDecoder;
 import wdw.protocal.codec.PacketEncoder;
 import wdw.protocal.codec.Spliter;
+import wdw.protocal.request.LoginRequestPacket;
 import wdw.protocal.request.MessageRequestPacket;
-import wdw.util.LoginUtil;
+import wdw.session.Session;
+import wdw.util.SessionUtil;
 
 import java.util.Date;
 import java.util.Scanner;
@@ -48,16 +47,34 @@ public class NettyClient {
     private static void startConsoleThread(Channel channel) {
         new Thread(() -> {
             while (!Thread.interrupted()) {
-                //if (LoginUtil.hadLogin(channel)) {
-                    System.out.println("please input message :");
-                    Scanner sc = new Scanner(System.in);
-                    String line = sc.nextLine();
-                    MessageRequestPacket packet = new MessageRequestPacket();
-                    packet.setMessage(line);
-                    channel.writeAndFlush(packet);
-                //}
+                Scanner sc = new Scanner(System.in);
+                if(!SessionUtil.hadLogin(channel)){
+                    System.out.println("输入用户名登录：");
+                    String name = sc.nextLine();
+                    LoginRequestPacket loginRequestPacket = new LoginRequestPacket();
+                    loginRequestPacket.setUsername(name);
+
+                    loginRequestPacket.setPassword("3346535");
+
+                    channel.writeAndFlush(loginRequestPacket);
+                    waitForLoginResponse();
+                }else{
+                    System.out.println("输入消息：");
+                    String id = sc.next();
+                    String message = sc.next();
+                    channel.writeAndFlush(new MessageRequestPacket(id, message));
+                }
+
             }
         }).start();
+    }
+
+    private static void waitForLoginResponse(){
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e){
+
+        }
     }
 
     public static void main(String[] args) throws InterruptedException {
