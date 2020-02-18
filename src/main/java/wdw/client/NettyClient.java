@@ -8,10 +8,7 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import wdw.client.console.ConsoleCommandManager;
-import wdw.client.handler.CreateGroupResponseHandler;
-import wdw.client.handler.LoginResponseHandler;
-import wdw.client.handler.LogoutResponseHandler;
-import wdw.client.handler.MessageResponseHandler;
+import wdw.client.handler.*;
 import wdw.protocal.codec.PacketDecoder;
 import wdw.protocal.codec.PacketEncoder;
 import wdw.protocal.codec.Spliter;
@@ -77,6 +74,9 @@ public class NettyClient {
                         socketChannel.pipeline().addLast(new MessageResponseHandler());
                         socketChannel.pipeline().addLast(new CreateGroupResponseHandler());
                         socketChannel.pipeline().addLast(new LogoutResponseHandler());
+                        socketChannel.pipeline().addLast(new JoinGroupResponseHandler());
+                        socketChannel.pipeline().addLast(new QuitGroupResponseHandler());
+                        socketChannel.pipeline().addLast(new ListGroupResponseHandler());
                         socketChannel.pipeline().addLast(new PacketEncoder());
 
                     }

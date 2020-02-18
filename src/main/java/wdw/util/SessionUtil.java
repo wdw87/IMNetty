@@ -1,6 +1,7 @@
 package wdw.util;
 
 import io.netty.channel.Channel;
+import io.netty.channel.group.ChannelGroup;
 import io.netty.util.Attribute;
 import wdw.Attributes.Attributes;
 import wdw.session.Session;
@@ -10,6 +11,7 @@ import java.util.Map;
 
 public class SessionUtil {
     private static final Map<String, Channel> userIdChannelMap = new HashMap<>();
+    private static final Map<String, ChannelGroup> groupIdChannelMap = new HashMap<>();
 
     public static void bingChannel(Session session, Channel ch){
         userIdChannelMap.put(session.getUserId(), ch);
@@ -30,6 +32,13 @@ public class SessionUtil {
         return userIdChannelMap.get(id);
     }
 
+    public static void bindChannelGroup(String id, ChannelGroup cg){
+        groupIdChannelMap.put(id, cg);
+    }
+
+    public static ChannelGroup getChannelGroup(String gid){
+        return groupIdChannelMap.get(gid);
+    }
 
     public static void markAsLogin(Channel channel){
         channel.attr(Attributes.LOGIN).set(true);

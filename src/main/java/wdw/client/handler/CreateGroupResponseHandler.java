@@ -10,7 +10,7 @@ public class CreateGroupResponseHandler extends SimpleChannelInboundHandler<Crea
 
     @Override
     protected void channelRead0(ChannelHandlerContext channelHandlerContext, CreateGroupResponsePacket createGroupResponsePacket) throws Exception {
-        System.out.println(new Date() + "成功创建群组, id为 [" + createGroupResponsePacket.getGroupId() + "]");
+        System.out.println(new Date() + ": 成功创建群组, id为 [" + createGroupResponsePacket.getGroupId() + "]");
         System.out.println("群成员有:" + createGroupResponsePacket.getUserNameList());
     }
 }

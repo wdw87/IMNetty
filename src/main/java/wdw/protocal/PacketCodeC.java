@@ -3,14 +3,8 @@ package wdw.protocal;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
 import wdw.protocal.command.Command;
-import wdw.protocal.request.CreateGroupRequestPacket;
-import wdw.protocal.request.LoginRequestPacket;
-import wdw.protocal.request.LogoutRequestPacket;
-import wdw.protocal.request.MessageRequestPacket;
-import wdw.protocal.response.CreateGroupResponsePacket;
-import wdw.protocal.response.LoginResponsePacket;
-import wdw.protocal.response.LogoutResponsePacket;
-import wdw.protocal.response.MessageResponsePacket;
+import wdw.protocal.request.*;
+import wdw.protocal.response.*;
 import wdw.serialize.Serializer;
 import wdw.serialize.impl.JSONSerializer;
 
@@ -39,6 +33,13 @@ public class PacketCodeC {
         requestTypeMap.put(Command.CREATE_GROUP_RESPONSE, CreateGroupResponsePacket.class);
         requestTypeMap.put(Command.LOGOUT_REQUEST, LogoutRequestPacket.class);
         requestTypeMap.put(Command.LOGOUT_RESPONSE, LogoutResponsePacket.class);
+        requestTypeMap.put(Command.JOIN_GROUP_REQUEST, JoinGroupRequestPacket.class);
+        requestTypeMap.put(Command.JOIN_GROUP_RESPONSE, JoinGroupResponsePacket.class);
+        requestTypeMap.put(Command.QUIT_GROUP_REQUEST, QuitGroupRequestPacket.class);
+        requestTypeMap.put(Command.QUIT_GROUP_RESPONSE, QuitGroupResponsePacket.class);
+        requestTypeMap.put(Command.LIST_GROUP_REQUEST, ListGroupRequestPacket.class);
+        requestTypeMap.put(Command.LIST_GROUP_RESPONSE, ListGroupResponsePacket.class);
+
 
         Serializer serializer = new JSONSerializer();
         serializerTypeMap.put(serializer.getSerializerAlgorithm(), serializer);
