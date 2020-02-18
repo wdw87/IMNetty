@@ -7,15 +7,14 @@ import io.netty.channel.ChannelInitializer;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import wdw.client.console.ConsoleCommandManager;
+import wdw.client.handler.CreateGroupResponseHandler;
 import wdw.client.handler.LoginResponseHandler;
+import wdw.client.handler.LogoutResponseHandler;
 import wdw.client.handler.MessageResponseHandler;
 import wdw.protocal.codec.PacketDecoder;
 import wdw.protocal.codec.PacketEncoder;
 import wdw.protocal.codec.Spliter;
-import wdw.protocal.request.LoginRequestPacket;
-import wdw.protocal.request.MessageRequestPacket;
-import wdw.session.Session;
-import wdw.util.SessionUtil;
 
 import java.util.Date;
 import java.util.Scanner;
@@ -45,26 +44,11 @@ public class NettyClient {
     }
 
     private static void startConsoleThread(Channel channel) {
+        ConsoleCommandManager consoleCommandManager = new ConsoleCommandManager();
+        Scanner sc = new Scanner(System.in);
         new Thread(() -> {
             while (!Thread.interrupted()) {
-                Scanner sc = new Scanner(System.in);
-                if(!SessionUtil.hadLogin(channel)){
-                    System.out.println("输入用户名登录：");
-                    String name = sc.nextLine();
-                    LoginRequestPacket loginRequestPacket = new LoginRequestPacket();
-                    loginRequestPacket.setUsername(name);
-
-                    loginRequestPacket.setPassword("3346535");
-
-                    channel.writeAndFlush(loginRequestPacket);
-                    waitForLoginResponse();
-                }else{
-                    System.out.println("输入消息：");
-                    String id = sc.next();
-                    String message = sc.next();
-                    channel.writeAndFlush(new MessageRequestPacket(id, message));
-                }
-
+                consoleCommandManager.exec(sc, channel);
             }
         }).start();
     }
@@ -91,6 +75,8 @@ public class NettyClient {
                         socketChannel.pipeline().addLast(new PacketDecoder());
                         socketChannel.pipeline().addLast(new LoginResponseHandler());
                         socketChannel.pipeline().addLast(new MessageResponseHandler());
+                        socketChannel.pipeline().addLast(new CreateGroupResponseHandler());
+                        socketChannel.pipeline().addLast(new LogoutResponseHandler());
                         socketChannel.pipeline().addLast(new PacketEncoder());
 
                     }

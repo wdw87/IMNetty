@@ -14,9 +14,7 @@ import io.netty.util.concurrent.GenericFutureListener;
 import wdw.protocal.codec.PacketDecoder;
 import wdw.protocal.codec.PacketEncoder;
 import wdw.protocal.codec.Spliter;
-import wdw.server.handler.AuthHandler;
-import wdw.server.handler.LoginRequestHandler;
-import wdw.server.handler.MessageRequestHandler;
+import wdw.server.handler.*;
 
 public class NettyServer {
     private static void bind(final ServerBootstrap serverBootstrap, final int port){
@@ -51,6 +49,8 @@ public class NettyServer {
                         nioSocketChannel.pipeline().addLast(new LoginRequestHandler());
                         nioSocketChannel.pipeline().addLast(new AuthHandler());
                         nioSocketChannel.pipeline().addLast(new MessageRequestHandler());
+                        nioSocketChannel.pipeline().addLast(new CreateGroupRequestHandler());
+                        nioSocketChannel.pipeline().addLast(new LogoutRequestHandler());
                         nioSocketChannel.pipeline().addLast(new PacketEncoder());
                     }
                 });

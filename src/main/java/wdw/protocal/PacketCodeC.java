@@ -3,9 +3,13 @@ package wdw.protocal;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
 import wdw.protocal.command.Command;
+import wdw.protocal.request.CreateGroupRequestPacket;
 import wdw.protocal.request.LoginRequestPacket;
+import wdw.protocal.request.LogoutRequestPacket;
 import wdw.protocal.request.MessageRequestPacket;
+import wdw.protocal.response.CreateGroupResponsePacket;
 import wdw.protocal.response.LoginResponsePacket;
+import wdw.protocal.response.LogoutResponsePacket;
 import wdw.protocal.response.MessageResponsePacket;
 import wdw.serialize.Serializer;
 import wdw.serialize.impl.JSONSerializer;
@@ -31,7 +35,10 @@ public class PacketCodeC {
         requestTypeMap.put(Command.LOGIN_RESPONSE, LoginResponsePacket.class);
         requestTypeMap.put(Command.MESSAGE_REQUEST, MessageRequestPacket.class);
         requestTypeMap.put(Command.MESSAGE_RESPONSE, MessageResponsePacket.class);
-
+        requestTypeMap.put(Command.CREATE_GROUP_REQUEST, CreateGroupRequestPacket.class);
+        requestTypeMap.put(Command.CREATE_GROUP_RESPONSE, CreateGroupResponsePacket.class);
+        requestTypeMap.put(Command.LOGOUT_REQUEST, LogoutRequestPacket.class);
+        requestTypeMap.put(Command.LOGOUT_RESPONSE, LogoutResponsePacket.class);
 
         Serializer serializer = new JSONSerializer();
         serializerTypeMap.put(serializer.getSerializerAlgorithm(), serializer);
