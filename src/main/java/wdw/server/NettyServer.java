@@ -12,6 +12,7 @@ import io.netty.handler.codec.string.StringDecoder;
 import io.netty.util.concurrent.Future;
 import io.netty.util.concurrent.GenericFutureListener;
 import wdw.client.handler.JoinGroupResponseHandler;
+import wdw.client.handler.SendToGroupResponseHandler;
 import wdw.protocal.codec.PacketDecoder;
 import wdw.protocal.codec.PacketEncoder;
 import wdw.protocal.codec.Spliter;
@@ -55,6 +56,7 @@ public class NettyServer {
                         nioSocketChannel.pipeline().addLast(new JoinGroupRequestHandler());
                         nioSocketChannel.pipeline().addLast(new QuitGroupRequestHandler());
                         nioSocketChannel.pipeline().addLast(new ListGroupRequestHandler());
+                        nioSocketChannel.pipeline().addLast(new SendToGroupRequestHandler());
                         nioSocketChannel.pipeline().addLast(new PacketEncoder());
                     }
                 });
