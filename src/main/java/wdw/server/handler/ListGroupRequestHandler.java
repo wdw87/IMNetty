@@ -1,6 +1,7 @@
 package wdw.server.handler;
 
 import io.netty.channel.Channel;
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.channel.group.ChannelGroup;
@@ -12,7 +13,11 @@ import wdw.util.SessionUtil;
 import java.util.ArrayList;
 import java.util.List;
 
+@ChannelHandler.Sharable
 public class ListGroupRequestHandler extends SimpleChannelInboundHandler<ListGroupRequestPacket> {
+
+    public static final ListGroupRequestHandler INSTANCE = new ListGroupRequestHandler();
+
     @Override
     protected void channelRead0(ChannelHandlerContext channelHandlerContext, ListGroupRequestPacket listGroupRequestPacket) throws Exception {
 

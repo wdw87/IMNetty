@@ -1,5 +1,6 @@
 package wdw.server.handler;
 
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import wdw.protocal.request.LogoutRequestPacket;
@@ -8,7 +9,11 @@ import wdw.util.SessionUtil;
 
 import java.util.Date;
 
+@ChannelHandler.Sharable
 public class LogoutRequestHandler extends SimpleChannelInboundHandler<LogoutRequestPacket> {
+
+    public static final LogoutRequestHandler INSTANCE = new LogoutRequestHandler();
+
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, LogoutRequestPacket logoutRequestPacket) throws Exception {
         String user = SessionUtil.getSession(ctx.channel()).getUserName();

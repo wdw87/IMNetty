@@ -1,5 +1,6 @@
 package wdw.server.handler;
 
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import wdw.protocal.request.LoginRequestPacket;
@@ -10,7 +11,12 @@ import wdw.util.SessionUtil;
 import java.util.Date;
 import java.util.UUID;
 
+
+@ChannelHandler.Sharable
 public class LoginRequestHandler extends SimpleChannelInboundHandler<LoginRequestPacket> {
+
+    public static final LoginRequestHandler INSTANCE = new LoginRequestHandler();
+
     @Override
     protected void channelRead0(ChannelHandlerContext channelHandlerContext, LoginRequestPacket loginRequestPacket) throws Exception {
         System.out.println(new Date() + ": received login access...");

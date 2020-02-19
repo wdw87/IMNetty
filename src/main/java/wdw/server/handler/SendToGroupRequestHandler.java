@@ -1,6 +1,7 @@
 package wdw.server.handler;
 
 import io.netty.channel.Channel;
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.channel.group.ChannelGroup;
@@ -9,7 +10,10 @@ import wdw.protocal.response.SendToGroupResponsePacket;
 import wdw.session.Session;
 import wdw.util.SessionUtil;
 
+@ChannelHandler.Sharable
 public class SendToGroupRequestHandler extends SimpleChannelInboundHandler<SendToGroupRequestPacket> {
+
+    public static final SendToGroupRequestHandler INSTANCE = new SendToGroupRequestHandler();
     @Override
     protected void channelRead0(ChannelHandlerContext channelHandlerContext, SendToGroupRequestPacket sendToGroupRequestPacket) throws Exception {
         String gid = sendToGroupRequestPacket.getGid();
@@ -34,8 +38,6 @@ public class SendToGroupRequestHandler extends SimpleChannelInboundHandler<SendT
             packet.setReason("no such group");
             channelHandlerContext.channel().writeAndFlush(packet);
         }
-
-
 
     }
 }

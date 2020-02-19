@@ -48,27 +48,29 @@ public class NettyServer {
                     protected void initChannel(NioSocketChannel nioSocketChannel) throws Exception {
                         nioSocketChannel.pipeline().addLast(new Spliter());
                         nioSocketChannel.pipeline().addLast(new PacketDecoder());
-                        nioSocketChannel.pipeline().addLast(new LoginRequestHandler());
-                        nioSocketChannel.pipeline().addLast(new AuthHandler());
-                        nioSocketChannel.pipeline().addLast(new MessageRequestHandler());
-                        nioSocketChannel.pipeline().addLast(new CreateGroupRequestHandler());
-                        nioSocketChannel.pipeline().addLast(new LogoutRequestHandler());
-                        nioSocketChannel.pipeline().addLast(new JoinGroupRequestHandler());
-                        nioSocketChannel.pipeline().addLast(new QuitGroupRequestHandler());
-                        nioSocketChannel.pipeline().addLast(new ListGroupRequestHandler());
-                        nioSocketChannel.pipeline().addLast(new SendToGroupRequestHandler());
+//                        nioSocketChannel.pipeline().addLast(new LoginRequestHandler());
+//                        nioSocketChannel.pipeline().addLast(new AuthHandler());
+//                        nioSocketChannel.pipeline().addLast(new MessageRequestHandler());
+//                        nioSocketChannel.pipeline().addLast(new CreateGroupRequestHandler());
+//                        nioSocketChannel.pipeline().addLast(new LogoutRequestHandler());
+//                        nioSocketChannel.pipeline().addLast(new JoinGroupRequestHandler());
+//                        nioSocketChannel.pipeline().addLast(new QuitGroupRequestHandler());
+//                        nioSocketChannel.pipeline().addLast(new ListGroupRequestHandler());
+
+                        nioSocketChannel.pipeline().addLast(LoginRequestHandler.INSTANCE);
+                        nioSocketChannel.pipeline().addLast(AuthHandler.INSTANCE);
+//                        nioSocketChannel.pipeline().addLast(MessageRequestHandler.INSTANCE);
+//                        nioSocketChannel.pipeline().addLast(CreateGroupRequestHandler.INSTANCE);
+//                        nioSocketChannel.pipeline().addLast(LogoutRequestHandler.INSTANCE);
+//                        nioSocketChannel.pipeline().addLast(JoinGroupRequestHandler.INSTANCE);
+//                        nioSocketChannel.pipeline().addLast(QuitGroupRequestHandler.INSTANCE);
+//                        nioSocketChannel.pipeline().addLast(ListGroupRequestHandler.INSTANCE);
+                        nioSocketChannel.pipeline().addLast(IMHandler.INSTANCE);
+
                         nioSocketChannel.pipeline().addLast(new PacketEncoder());
                     }
                 });
-//        serverBootstrap.bind(1000).addListener(new GenericFutureListener<Future<? super Void>>() {
-//            public void operationComplete(Future<? super Void> future) throws Exception {
-//                if(future.isSuccess()){
-//                    System.out.println("成功绑定端口 ");
-//                }else{
-//                    System.out.println("绑定端口失败！！");
-//                }
-//            }
-//        });
+
         bind(serverBootstrap, 8000);
 
     }
