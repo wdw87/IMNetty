@@ -1,22 +1,20 @@
 package wdw.server;
 
 import io.netty.bootstrap.ServerBootstrap;
-import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
-import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
-import io.netty.handler.codec.string.StringDecoder;
 import io.netty.util.concurrent.Future;
 import io.netty.util.concurrent.GenericFutureListener;
-import wdw.client.handler.JoinGroupResponseHandler;
-import wdw.client.handler.SendToGroupResponseHandler;
+import wdw.server.handler.AuthHandler;
 import wdw.protocal.codec.PacketDecoder;
 import wdw.protocal.codec.PacketEncoder;
 import wdw.protocal.codec.Spliter;
 import wdw.server.handler.*;
+
+import java.net.Inet4Address;
 
 public class NettyServer {
     private static void bind(final ServerBootstrap serverBootstrap, final int port){
@@ -46,6 +44,7 @@ public class NettyServer {
                 .childHandler(new ChannelInitializer<NioSocketChannel>(){
                     @Override
                     protected void initChannel(NioSocketChannel nioSocketChannel) throws Exception {
+                        nioSocketChannel.pipeline().addLast(new IMIdleStateHandler());
                         nioSocketChannel.pipeline().addLast(new Spliter());
                         nioSocketChannel.pipeline().addLast(new PacketDecoder());
 //                        nioSocketChannel.pipeline().addLast(new LoginRequestHandler());
@@ -58,6 +57,7 @@ public class NettyServer {
 //                        nioSocketChannel.pipeline().addLast(new ListGroupRequestHandler());
 
                         nioSocketChannel.pipeline().addLast(LoginRequestHandler.INSTANCE);
+                        nioSocketChannel.pipeline().addLast(HeartBeatRequestHandler.INSTANCE);
                         nioSocketChannel.pipeline().addLast(AuthHandler.INSTANCE);
 //                        nioSocketChannel.pipeline().addLast(MessageRequestHandler.INSTANCE);
 //                        nioSocketChannel.pipeline().addLast(CreateGroupRequestHandler.INSTANCE);

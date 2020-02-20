@@ -12,6 +12,7 @@ import wdw.client.handler.*;
 import wdw.protocal.codec.PacketDecoder;
 import wdw.protocal.codec.PacketEncoder;
 import wdw.protocal.codec.Spliter;
+import wdw.server.handler.IMIdleStateHandler;
 
 import java.util.Date;
 import java.util.Scanner;
@@ -68,6 +69,7 @@ public class NettyClient {
                 .handler(new ChannelInitializer<SocketChannel>() {
                     @Override
                     protected void initChannel(SocketChannel socketChannel) throws Exception {
+                        socketChannel.pipeline().addLast(new IMIdleStateHandler());
                         socketChannel.pipeline().addLast(new Spliter());
                         socketChannel.pipeline().addLast(new PacketDecoder());
                         socketChannel.pipeline().addLast(new LoginResponseHandler());
